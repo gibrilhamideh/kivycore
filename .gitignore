@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# pyinstaller
+dist/
+build/
+
+# Virtual Environment
+.venv/
+
+./python-version
+
+# Visual Studio Code settings
+.vscode/
+
+
+# blender
+*.obj
+*.mtl

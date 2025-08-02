@@ -1,0 +1,33 @@
+#:import RelativeLayout kivy.uix.relativelayout.RelativeLayout
+
+BoxLayout:
+    orientation: 'horizontal'
+    padding: dp(25)
+    spacing: dp(25)
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+    RelativeLayout:
+        LineChart:
+            id: graph
+            radius: dp(10)
+            elevation: 2
+            shadow_offset: 0, -5
+            shadow_color: 0, 0, 0, 0.5
+            background_color: 1, 1, 1, 1
+
+    Card:
+        size_hint_x: None
+        width: dp(250)
+        orientation: 'vertical'
+
+        radius: dp(10)
+        elevation: 2
+        shadow_offset: 0, -5
+        shadow_color: 0, 0, 0, 0.5
+        background_color: 1, 1, 1, 1

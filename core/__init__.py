@@ -1,0 +1,1 @@
+import core.factory_registers
