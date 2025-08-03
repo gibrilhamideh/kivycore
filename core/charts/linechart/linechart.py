@@ -1,21 +1,21 @@
 from kivy.uix.label import CoreLabel
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.graphics import Color, Line, Rectangle, SmoothLine, Ellipse
-from kivy.properties import (
-    ListProperty,
-    NumericProperty,
-    ObjectProperty
-)
+from kivy.properties import ListProperty, NumericProperty
+
 
 from core.effects import Style
+from core.charts.marker import Marker
 from core.charts.tooltip import Tooltip
 from core.charts.linechart.line import ChartLine
 from core.charts.linechart.grid import Grid
 from core.charts.linechart.axis import Axis
 from core.charts.linechart.tick import Ticks
+from core.charts.linechart.cursor import Cursor
 
 
-class CoreLineChart(Style, ChartLine, Ticks, Axis, Grid, RelativeLayout):
+
+class CoreLineChart(Style, ChartLine, Cursor, Ticks, Axis, Grid, RelativeLayout):
 
 
     items: list[dict] = ListProperty()
@@ -60,6 +60,9 @@ class CoreLineChart(Style, ChartLine, Ticks, Axis, Grid, RelativeLayout):
     :attr:`y_ticks` is a :class:`~kivy.properties.NumericProperty`
     '''
 
+
+    __events__ = ('on_cursor_items', )
+
     # ================================= #
     #             Test Data
     # ================================= #
@@ -74,7 +77,6 @@ class CoreLineChart(Style, ChartLine, Ticks, Axis, Grid, RelativeLayout):
     test_data_2 = [
         (0, 1000), (4, 2450), (8, 4000), (12, 3250), (16, 3000), (20, 1350), (24, 1500)
     ]
-
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -92,6 +94,7 @@ class CoreLineChart(Style, ChartLine, Ticks, Axis, Grid, RelativeLayout):
     #  ================================= #          
     def redraw(self, *args):
         
+        self.line_info.clear()
         self.clear_widgets()
         self.canvas.clear()
         with self.canvas:
@@ -117,16 +120,26 @@ class CoreLineChart(Style, ChartLine, Ticks, Axis, Grid, RelativeLayout):
             if self.do_grid_y:
                 self.draw_y_grid()
 
+            self.draw_cursor()
+
             self.draw_line(self.test_data, color=(0, 1, 0, 1), width=2)
             self.draw_line(self.test_data_1, color=(0, 0, 1, 1), width=2)
             self.draw_line(self.test_data_2, color=(1, 0, 0, 1), width=2, placement='right')
 
         self.tooltip = Tooltip()
         self.add_widget(self.tooltip)
-            
+
+        self.marker = Marker(self)
+        self.add_widget(self.marker)
+
+        self.marker.top = self.grid_y
+        self.marker.center_x = self.grid_x
+        self.marker.bind(center_x=self.on_marker_x)
+  
     def draw_line(self, points, color=(1, 0, 0, 1), width=2, placement='left'):
         Color(*color)
         pixel_points = []
+        data = []
 
         if placement == 'left':
             for x_val, y_val in points:
@@ -140,11 +153,13 @@ class CoreLineChart(Style, ChartLine, Ticks, Axis, Grid, RelativeLayout):
                 dot_radius = self.dot_radius
                 Ellipse(pos=(px - dot_radius, py - dot_radius), size=(dot_radius * 2, dot_radius * 2))
 
-                self.line_info.append({
+                data.append({
                     'data': (x_val, y_val),
                     'pos': (px, py),
                     'norm': (norm_x, norm_y)
                 })
+
+            self.line_info.append(data)
 
             SmoothLine(points=pixel_points, width=width)
 
@@ -160,12 +175,13 @@ class CoreLineChart(Style, ChartLine, Ticks, Axis, Grid, RelativeLayout):
                 pixel_points.extend([px, py])
                 Ellipse(pos=(px - dot_radius, py - dot_radius), size=(dot_radius * 2, dot_radius * 2))
 
-                self.line_info.append({
+                data.append({
                     'data': (x_val, y_val),
                     'pos': (px, py),
                     'norm': (norm_x, norm_y)
                 })
 
+            self.line_info.append(data)
             SmoothLine(points=pixel_points, width=width)
 
     def draw_y_grid(self):
@@ -311,7 +327,33 @@ class CoreLineChart(Style, ChartLine, Ticks, Axis, Grid, RelativeLayout):
         Color(*color)
         Rectangle(texture=texture, pos=(x, y), size=texture.size)
 
+    def draw_cursor(self):
+        Color(*self.cursor_color)
+        self.cursor = Line(
+            points=[self.grid_x, self.grid_y, self.grid_x, self.grid_top],
+            dash_length=10,
+            dash_offset=5,
+            width=self.cursor_width
+        )
+
+    #  ================================= # 
+    #          Cursor Movement
+    #  ================================= #   
+    def move_cursor_right(self):
+        self.marker.move_right()
+
+    def move_cursor_left(self):
+        self.marker.move_left()
+
+    #  ================================= # 
+    #               Events
+    #  ================================= #   
+    def on_marker_x(self, instance, value):
+        self.cursor.points= [value, self.grid_y, value, self.grid_top]
+
     def on_items(self, instance, value):
         self.line_info.clear()
         self.redraw()
 
+    def on_cursor_items(self, value):
+        print("Cursor items:", value)

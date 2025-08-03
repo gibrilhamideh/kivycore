@@ -1,0 +1,36 @@
+
+
+<CoreSwitch>:
+    size_hint: None, None
+    size: dp(50), dp(25)
+    canvas.before:
+
+        # Background
+        Color:
+            rgba: root.background_color
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [self.height / 2] * 4
+
+        # Border
+        Color:
+            rgba: self.border_color if self.border_color else (0, 0, 0, 0)
+        SmoothLine:
+            width: root.border_width
+            rounded_rectangle:
+                [ \
+                self.x,
+                self.y, \
+                self.width, \
+                self.height, \
+                *[self.height / 2] * 4, \
+                ]
+
+    canvas:
+        Color:
+            rgba: root.switch_color
+        Ellipse:
+            pos: self.switch_pos
+            size: self.switch_size, self.switch_size
+

@@ -1,0 +1,51 @@
+<ElevatedButton>:
+    padding: dp(10)
+    font_size: dp(16)
+    pos_hint: {'center_y': 0.5}
+
+    size_hint: None, None
+    height:  app.theme.itemHeight if self.custom_height is None else self.custom_height
+    width: app.theme.itemWidth if self.custom_width is None else self.custom_width
+    radius: app.theme.itemRadius
+    
+    background_color: app.theme.secondaryColor
+    text_color: app.theme.onSecondaryColor
+    disabled_text_color: app.theme.disabledColor
+    ripple_color: app.theme.rippleColor
+    shadow_color: app.theme.shadowColor
+    border_color: None
+
+    elevation: 1
+    shadow_softness: 5, 5
+    shadow_offset: 0, -8
+
+    
+
+<IconButton>:
+    text: root.icon_markup if root.icon_markup else ''
+    size_hint: None, None
+    
+    color: app.theme.onPrimaryColor
+    disabled_color: app.theme.disabledColor
+    ripple_color: app.theme.rippleColor
+    background_color: [0, 0, 0, 0]
+    border_color: None
+
+    font_size: dp(28)
+
+
+<FloatingButton>:
+    text: root.icon_markup if root.icon_markup else ''
+    size_hint: None, None
+
+    radius: app.theme.floatingButtonHeight / 2
+    size: app.theme.floatingButtonWidth, app.theme.floatingButtonHeight
+    font_size: app.theme.floatingButtonFontSize
+    
+    color: app.theme.onPrimaryColor
+    disabled_color: app.theme.disabledColor
+    ripple_color: app.theme.rippleColor
+    background_color: app.theme.primaryColor
+    border_color: None
+
+    elevation: 1

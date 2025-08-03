@@ -48,16 +48,20 @@ class Grid(EventDispatcher):
     #          Positioning
     # ================================= # 
     def get_grid_x(self):
-        return self.x + self.padding[0]
+        x, y = self.to_local(self.x, self.y)
+        return x + self.padding[0]
 
     def get_grid_y(self):
-        return self.y + self.padding[2]
-    
+        x, y = self.to_local(self.x, self.y)
+        return y + self.padding[2]
+
     def get_grid_top(self):
-        return self.y + self.height - self.padding[3]
-    
+        x, y = self.to_local(self.x, self.y)
+        return y + self.height - self.padding[3]
+
     def get_grid_right(self):
-        return self.x + self.width - self.padding[1]
+        x, y = self.to_local(self.x, self.y)
+        return x + self.width - self.padding[1]
 
     def get_grid_pos(self):
         return self.get_grid_x(), self.get_grid_y()

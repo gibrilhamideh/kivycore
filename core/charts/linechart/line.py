@@ -40,16 +40,19 @@ class ChartLine(EventDispatcher):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            for line in self.line_info:
-                if 'pos' in line and (line['pos'][0] - self.touch_tolerance <= touch.x <= line['pos'][0] + self.touch_tolerance) and \
-                   (line['pos'][1] - self.touch_tolerance <= touch.y <= line['pos'][1] + self.touch_tolerance):
-                    self.open_tooltip(**line)
+            for series in self.line_info:
+                for point in series:
+                    if 'pos' in point:
+                        px, py = point['pos']
+                        if (
+                            px - self.touch_tolerance <= touch.x <= px + self.touch_tolerance and
+                            py - self.touch_tolerance <= touch.y <= py + self.touch_tolerance
+                        ):
+                            self.open_tooltip(**point)
+                            return True
 
-                    return True
-                
         self.dismiss_tooltip()
         return super().on_touch_down(touch)
-    
 
     def open_tooltip(self, **kwargs):
         """

@@ -1,12 +1,24 @@
-import core.factory_registers
-import widgets.factory_registers
+from __future__ import annotations
+from typing import Type
 
 from kivy.core.window import Window
-from kivy.app import App
+from kivy.properties import ObjectProperty
+from core.app import CoreApp
 
-class Main(App):
-    
-    def on_start(self):
+
+from widgets.uix.theme import Theme
+
+class Main(CoreApp):
+
+    theme: Type[Theme] = ObjectProperty(None)
+
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.theme = Theme()
+        self.theme.mode = 'Light'
+
         Window.size = (1200, 800)
 
 
