@@ -1,0 +1,18 @@
+
+
+
+<BottomSheet>:
+    size_hint_y: None
+    height: dp(480)
+    top: dp(21)
+    radius: dp(32), dp(32), dp(0), dp(0)
+    background_color: app.theme.surfaceColor
+    padding: 0, dp(21), 0, 0
+
+    canvas.before:
+        Color:
+            rgba: app.theme.accentColor
+        Line:
+            width: dp(2)
+            points: [self.center_x - dp(21), self.top - dp(12), self.center_x + dp(21), self.top - dp(12)]
+            cap: 'round'

@@ -1,1 +1,0 @@
-import widgets.factory_registers
